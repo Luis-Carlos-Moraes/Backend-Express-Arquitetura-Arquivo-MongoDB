@@ -16,7 +16,6 @@ Construir uma **API Express** para gerenciar **alunos**, com persistência **em 
 
 * Uma API Node.js + Express com:
 
-  * Rotas para **cadastrar** e **listar** alunos em **arquivo**.
   * Rotas para **cadastrar** e **listar** alunos em **MongoDB**.
 * Projeto minimamente **organizado em camadas**, por exemplo:
 
