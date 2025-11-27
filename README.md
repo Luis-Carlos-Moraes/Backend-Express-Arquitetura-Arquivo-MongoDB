@@ -1,8 +1,8 @@
-# Etapa 2 (Backend – Express + Arquitetura + Arquivo + MongoDB)
+# Etapa 2 (Backend – Express + Arquitetura + MongoDB)
 
 ## Desafio
 
-Construir uma **API Express** para gerenciar **alunos**, com persistência **em arquivo** e em **MongoDB**, **organizando o código em uma arquitetura minimamente limpa** (separação de responsabilidades, camadas e módulos).
+Construir uma **API Express** para gerenciar **alunos**, com persistência em **MongoDB**, organizada em uma **arquitetura minimamente limpa** (separação de responsabilidades, camadas e módulos).
 
 **Tempo sugerido:** ~30 min
 **Stack:** Node.js + Express + MongoDB (JavaScript, sem TypeScript)
@@ -14,16 +14,17 @@ Construir uma **API Express** para gerenciar **alunos**, com persistência **em 
 
 ## O que você vai entregar
 
-* Uma API Node.js + Express com:
+* Uma API Node.js + Express com rotas para:
 
-  * Rotas para **cadastrar** e **listar** alunos em **MongoDB**.
-* Projeto minimamente **organizado em camadas**, por exemplo:
+  * **Cadastrar** alunos em MongoDB.
+  * **Listar** alunos do MongoDB.
+* Projeto minimamente **organizado em camadas**, contemplando:
 
-  * Arquivo de entrada do servidor (`server.js`/`index.js`).
-  * Pasta de **rotas** (ex.: `routes/`).
-  * Pasta de **controllers/handlers** (ex.: `controllers/`).
-  * Pasta de **serviços/repositórios** para acesso a dados (arquivo + MongoDB).
-  * Arquivo/pasta de **configuração** (ex.: conexão Mongo, variáveis de ambiente).
+  * Ponto de entrada do servidor.
+  * Camada de **rotas**.
+  * Camada de **controllers/handlers**.
+  * Camada de **serviços/repositórios** para acesso a dados (MongoDB).
+  * Camada de **configuração** (ex.: conexão Mongo, variáveis de ambiente).
 * Um **README** com:
 
   * Como rodar o projeto.
@@ -34,136 +35,81 @@ Construir uma **API Express** para gerenciar **alunos**, com persistência **em 
 
 ## Rotas obrigatórias
 
-### Parte 1 — Arquivo (`alunos.json`)
+* Rota para **cadastrar** um aluno em MongoDB.
 
-1. **POST `/aluno/cadastrar`**
+  * Deve receber os dados do aluno via corpo da requisição.
+* Rota para **listar** todos os alunos cadastrados em MongoDB.
 
-   **Body (JSON):**
+  * Deve retornar a lista em formato JSON.
 
-   ```json
-   {
-     "nome": "Maria",
-     "email": "maria@example.com",
-     "dataNascimento": "2000-01-01",
-     "matricula": "20251234"
-   }
-   ```
+Os campos mínimos esperados para o aluno são:
+`nome`, `email`, `dataNascimento`, `matricula`.
 
-   **Regra:** adicionar ao arquivo **`alunos.json`** (não sobrescrever; sempre acumular).
-
-2. **GET `/aluno/listar`**
-
-   Lê **`alunos.json`** e retorna a lista de alunos em **JSON**.
-
----
-
-### Parte 2 — MongoDB
-
-3. **POST `/aluno/cadastrar-db`**
-
-   Mesmo payload do cadastro em arquivo, **salvando no MongoDB**.
-
-4. **GET `/aluno/listar-db`**
-
-   Retorna todos os alunos armazenados no **MongoDB** em **JSON**.
-
----
-
-### Parte 3 — Repositório
-
-5. Publique o código no **GitHub** (repositório público).
+Você é livre para definir nomes exatos de rotas, formatos de resposta e estrutura de pastas, desde que sejam coerentes e estejam documentados.
 
 ---
 
 ## Requisitos técnicos
 
-* Tratar **arquivo inexistente** de forma segura (criar `alunos.json` vazio se necessário).
-* Validar minimamente o payload (**campos obrigatórios**: `nome`, `email`, `dataNascimento`, `matricula`).
-* Usar **variáveis de ambiente** para conexão MongoDB (ex.: `MONGO_URI`).
-* Definir **status HTTP adequados** para sucesso e erro.
-* Não deixar toda a lógica direto no `server.js`/`index.js` — **separar em módulos**.
+* Validação mínima dos dados de entrada (campos obrigatórios).
+* Uso de **variáveis de ambiente** para a string de conexão com o MongoDB.
+* Conexão com o banco centralizada em um ponto de configuração.
+* Uso de **status HTTP adequados** para sucesso e erro.
+* Lógica de negócio e de acesso a dados **não** concentrada apenas no arquivo principal do servidor.
 
 ---
 
 ## Requisitos de arquitetura
 
-Não precisa ser perfeito nem ultra complexo, mas queremos ver uma **preocupação real com arquitetura**:
+Não precisa ser perfeito nem cheio de patterns, mas queremos ver:
 
 * **Separação de responsabilidades**:
 
-  * Rotas apenas definem **endpoints e chamam handlers**.
-  * Controllers/handlers cuidam de **entrada/saída HTTP** (req/res).
-  * Serviços/repositórios concentram a **lógica de negócio e acesso a dados** (arquivo + MongoDB).
-
+  * Rotas apenas definem endpoints e encaminham a chamada.
+  * Controllers/handlers cuidam de traduzir requisição/resposta.
+  * Serviços/repositórios cuidam da lógica de negócio e do acesso ao MongoDB.
 * **Tratamento de erros**:
 
-  * Responder mensagens claras em caso de falha (ex.: problema de I/O ou conexão com Mongo).
-  * Retornar status codes coerentes (400, 404, 500, etc.).
+  * Mensagens claras em caso de falha.
+  * Status code coerente com o tipo de erro.
 * **Código legível**:
 
-  * Nomes de funções e variáveis que expliquem o que fazem.
-  * Evitar duplicação quando possível (ex.: mesma validação usada para arquivo e DB).
-
----
-
-## Testes rápidos (curl)
-
-```bash
-# cadastrar em arquivo
-curl -X POST http://localhost:3001/aluno/cadastrar \
-  -H "Content-Type: application/json" \
-  -d '{"nome":"Maria","email":"maria@example.com","dataNascimento":"2000-01-01","matricula":"20251234"}'
-
-# listar do arquivo
-curl http://localhost:3001/aluno/listar
-
-# cadastrar no banco
-curl -X POST http://localhost:3001/aluno/cadastrar-db \
-  -H "Content-Type: application/json" \
-  -d '{"nome":"João","email":"joao@example.com","dataNascimento":"1999-05-10","matricula":"20251111"}'
-
-# listar do banco
-curl http://localhost:3001/aluno/listar-db
-```
+  * Nome de arquivos, funções e variáveis que indiquem claramente o propósito.
+  * Evitar duplicação desnecessária.
 
 ---
 
 ## Critérios de avaliação
 
-* **Resolução do Problema**
+* **Resolução do problema**
 
-  * Rotas funcionam e atendem ao enunciado (arquivo + MongoDB).
-  * Fluxo básico de cadastro/listagem funcionando.
+  * Cadastro e listagem de alunos funcionam conforme descrito.
 
-* **Conhecimento Técnico**
+* **Conhecimento técnico**
 
-  * Uso de **Express** (rotas, middlewares básicos).
-  * I/O de arquivos com Node.js.
-  * Integração com **MongoDB** usando string de conexão via `.env`.
+  * Uso adequado de Express.
+  * Integração com MongoDB.
+  * Uso de `.env` para configurações sensíveis.
 
-* **Arquitetura / Organização**
+* **Arquitetura / organização**
 
-  * Separação entre **rotas, controllers/handlers e repositórios/serviços**.
-  * Organização de pastas coerente.
-  * Evita tudo em um único arquivo gigante.
+  * Separação de camadas (rotas, controllers, serviços/repositórios, config).
+  * Estrutura de código que facilite manutenção e evolução.
 
-* **Boas Práticas**
+* **Boas práticas**
 
-  * Código claro, legível e sem complexidade desnecessária.
+  * Código claro, objetivo e sem complexidade desnecessária.
   * Validações mínimas de entrada.
-  * Status HTTP e mensagens de erro razoáveis.
+  * Tratamento razoável de erros.
 
 * **Documentação**
 
-  * README com:
-
-    * Como rodar o projeto.
-    * Como configurar o `.env`.
-    * **Resumo das decisões de arquitetura**.
+  * README com instruções para rodar o projeto e configurar o ambiente.
+  * Breve explicação das decisões de arquitetura.
 
 ---
 
 ## Entrega
 
-* Publique em um **repositório público** no GitHub.
+* Publique o código em um **repositório público** no GitHub.
 * Envie o link conforme orientado no processo seletivo.
