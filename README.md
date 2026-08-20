@@ -44,14 +44,6 @@ O código inicial em `src/app.js` foi intencionalmente escrito de forma simples 
 
 Sua primeira missão é **redesenhar e organizar a arquitetura da aplicação** utilizando o padrão que você considerar ideal para uma aplicação escalável e manutenível (ex.: *Clean Architecture*, *Hexagonal / Ports and Adapters*, *Arquitetura em Camadas / DDD simplificado*).
 
-Esperamos ver:
-- Separação clara de responsabilidades:
-  - **Rotas / HTTP Handlers / Controllers**: tradução de requisições e respostas.
-  - **Casos de Uso / Serviços de Domínio**: onde vivem as regras de negócio puras (desacopladas de frameworks e do banco).
-  - **Repositórios / Camada de Dados**: persistência e consultas no MongoDB.
-  - **Entidades de Domínio / Validações**: regras intrínsecas dos dados.
-  - **Tratamento Global de Erros**: mapeamento de exceções de domínio para respostas HTTP semânticas.
-
 ---
 
 ### 2. Implementação das Regras de Negócio
