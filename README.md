@@ -1,164 +1,304 @@
-# 🎓 Desafio Técnico – Sênior II Backend (Node.js + Express + MongoDB)
+# Desafio Técnico — Backend Sênior II
 
-Seja muito bem-vindo(a) ao desafio técnico para a vaga de **Sênior II Backend**!
+API de gestão de matrículas e bolsas educacionais utilizando Node.js, Express e MongoDB.
 
-Este desafio foi desenhado para avaliar sua capacidade de **design de arquitetura**, **modelagem de domínio**, **implementação de regras de negócio complexas**, **concorrência/consistência em banco de dados** e **testes automatizados**.
+## Objetivo
 
-Para que você **não perca tempo** configurando ferramentas básicas, entregamos um ambiente pré-configurado e 100% funcional.
+Este desafio avalia principalmente como você:
 
----
+- explora e entende um projeto existente;
+- transforma requisitos em regras e invariantes;
+- organiza responsabilidades de forma proporcional;
+- utiliza Express, HTTP e MongoDB;
+- identifica riscos de concorrência e consistência;
+- escreve e revisa testes;
+- explica decisões e trade-offs.
 
-## ⚡ Inicialização Rápida (Menos de 2 minutos)
+O objetivo não é medir velocidade de digitação, quantidade de arquivos ou conhecimento decorado de padrões arquiteturais.
 
-O ambiente já está preparado para **não gerar conflito de portas** com serviços que você já tenha rodando na sua máquina:
-- **MongoDB**: roda no Docker mapeado na porta **`27028`** (em vez da 27017 padrão).
-- **API Express**: roda na porta **`3333`** (em vez da 3000 padrão).
-- **Testes**: utilizam `mongodb-memory-server` em memória (rodam instantaneamente sem depender do Docker).
+## Live coding (aproximadamente 40 minutos)
 
-### Fluxo de Inicialização:
+Você poderá consultar internet e documentação, mas não utilizar IA para gerar a solução.
 
-1. **Subir o MongoDB**: Utilizar o `docker-compose.yml` disponibilizado (o banco está configurado para subir na porta **`27028`**).
-2. **Instalar as Dependências**: Instalar os pacotes definidos no `package.json`.
-3. **Popular o Banco (Seed)**: Executar o script de seed para cadastrar os cursos iniciais de teste.
-4. **Iniciar a Aplicação**: Rodar a aplicação em modo de desenvolvimento (configurada na porta **`3333`**).
-5. **Executar os Testes**: Rodar a suíte de testes automatizados.
+Não existe expectativa de concluir todo o desafio nessa etapa. Faça o que considerar mais relevante no tempo disponível. Concluir todo o escopo não é critério de aprovação.
 
-> **Endpoints para validação:**
-> - Healthcheck: `GET http://localhost:3333/health`
-> - Cursos iniciais: `GET http://localhost:3333/courses`
+O ambiente, as dependências, o banco, o seed e os testes iniciais devem ser validados antes de iniciar a contagem dos 40 minutos. Problemas de instalação ou infraestrutura não fazem parte da avaliação e não devem consumir o tempo do candidato.
 
----
+Durante o live coding, valorizamos:
 
-## 🎯 O Cenário de Negócio
+- entendimento e priorização;
+- comunicação do raciocínio;
+- fundamentos de backend;
+- identificação de riscos e edge cases;
+- qualidade das decisões, mesmo que ainda não estejam implementadas.
 
-Você assumirá o backend de um **Sistema de Gestão de Matrículas e Bolsas Educacionais**.
+Escrever menos código com raciocínio correto pode demonstrar mais senioridade do que concluir rapidamente com regras incorretas.
 
-A aplicação gerencia o cadastro de alunos, cursos oferecidos e o processo de matrícula, aplicando regras de elegibilidade, cálculo automático de bolsas de estudo, controle de capacidade de turmas com fila de espera e repescagem automática em caso de cancelamento.
+## O que já está pronto
 
----
+- aplicação Express com JSON e CORS configurados;
+- conexão com MongoDB separada da instância Express;
+- model de curso;
+- Docker Compose com MongoDB;
+- seed idempotente com três cursos;
+- `GET /health` e `GET /courses`;
+- resposta 404 e middleware básico de erros;
+- Jest, Supertest e helper de MongoDB em memória;
+- testes iniciais de funcionamento.
 
-## 🏗️ Sua Missão no Desafio
+Você não precisa recriar essa infraestrutura. Pode refatorá-la caso isso ajude sua solução.
 
-### 1. Refatoração e Design de Arquitetura (Foco Principal)
-O código inicial em `src/app.js` foi intencionalmente escrito de forma simples e acoplada apenas para viabilizar a execução imediata.
+## O que deve ser implementado
 
-Sua primeira missão é **redesenhar e organizar a arquitetura da aplicação** utilizando o padrão que você considerar ideal para uma aplicação escalável e manutenível (ex.: *Clean Architecture*, *Hexagonal / Ports and Adapters*, *Arquitetura em Camadas / DDD simplificado*).
+- cadastro e listagem de alunos;
+- matrícula com idade mínima e bolsa;
+- controle de capacidade e fila de espera;
+- prevenção de matrícula ativa duplicada;
+- cancelamento e promoção da fila;
+- listagem filtrada de matrículas;
+- testes das regras e fluxos principais;
+- breve documentação das decisões.
 
----
+## Contrato HTTP
 
-### 2. Implementação das Regras de Negócio
+| Método | Endpoint | Sucesso |
+|---|---|---:|
+| `GET` | `/health` | `200` quando a API e o banco estão prontos; `503` quando o banco não está disponível |
+| `GET` | `/courses` | `200` |
+| `POST` | `/students` | `201` |
+| `GET` | `/students` | `200` |
+| `POST` | `/enrollments` | `201` |
+| `GET` | `/enrollments` | `200` |
+| `PATCH` | `/enrollments/:id/cancel` | `200` |
 
-Você deverá implementar os fluxos completos descritos abaixo:
+Mantenha as respostas de erro em JSON e com formato consistente. O envelope exato fica a seu critério.
 
-#### A. Gestão de Alunos (`/students`)
-- **Cadastro de Aluno (`POST /students`)**:
-  - Campos: `nome`, `cpf`, `email`, `dataNascimento`, `rendaFamiliar`.
-  - **Validações:**
-    - CPF deve ser válido (formato/dígitos) e **único**.
-    - Email deve ter formato válido e ser **único**.
-    - Campos obrigatórios preenchidos.
-- **Listagem de Alunos (`GET /students`)**:
-  - Retornar a lista de alunos cadastrados.
+## Inicialização
 
----
+### Pré-requisitos
 
-#### B. Processo de Matrícula (`POST /enrollments`)
-Ao receber uma solicitação de matrícula contendo `{ alunoId, cursoId }`:
+- Node.js na versão indicada em `.nvmrc`;
+- Docker com Docker Compose.
 
-1. **Validação de Elegibilidade por Idade Mínima:**
-   - O aluno deve ter idade igual ou superior à `idadeMinima` exigida pelo curso na data da matrícula.
-   - Caso não atinja a idade mínima, a requisição deve ser rejeitada com erro semântico de regra de negócio (`422 Unprocessable Entity`).
+### Comandos
 
-2. **Cálculo Automático de Bolsa de Estudo:**
-   - A mensalidade final da matrícula deve ser calculada a partir da `rendaFamiliar` do aluno:
-     | Faixa de Renda Familiar | Percentual de Bolsa | Valor da Mensalidade Final |
-     | :--- | :---: | :--- |
-     | Até **R$ 2.824,00** (até 2 salários mínimos) | **50%** | 50% do valor do curso |
-     | De **R$ 2.824,01** até **R$ 5.648,00** (2 a 4 salários) | **20%** | 80% do valor do curso |
-     | Acima de **R$ 5.648,00** | **0%** | Valor integral do curso |
-   - O percentual de bolsa aplicado e o valor final da mensalidade devem ser gravados no registro da matrícula.
+```bash
+npm ci
+cp .env.example .env  # opcional: a aplicação possui defaults locais
+npm run db:up
+npm run seed
+npm run dev
+```
 
-3. **Controle Atômico de Vagas & Fila de Espera:**
-   - Se o curso **ainda tiver vagas disponíveis** (`vagasOcupadas < capacidadeVagas`):
-     - A matrícula é criada com status **`CONFIRMADA`**.
-     - O campo `vagasOcupadas` do curso deve ser incrementado de forma **atômica e segura contra condições de corrida (race conditions)**.
-   - Se o curso **estiver lotado** (`vagasOcupadas >= capacidadeVagas`):
-     - A matrícula é criada com status **`FILA_ESPERA`** (sem incrementar vagas ocupadas).
+Em outro terminal:
 
-4. **Prevenção de Duplicidade:**
-   - Um aluno **não pode** possuir mais de uma matrícula com status `CONFIRMADA` ou `FILA_ESPERA` no mesmo curso.
+```bash
+npm test
+```
 
----
+Comandos úteis:
 
-#### C. Cancelamento de Matrícula com Repescagem (`PATCH /enrollments/:id/cancel`)
-Ao cancelar uma matrícula:
+```bash
+npm run test:watch
+npm run test:coverage
+npm run db:down
+```
 
-1. A matrícula alvo tem seu status alterado para **`CANCELADA`**.
-2. **Repescagem da Fila de Espera:**
-   - Se a matrícula cancelada era `CONFIRMADA`:
-     - O sistema deve verificar se existem alunos na **`FILA_ESPERA`** daquele curso (ordenados cronologicamente pela data de inscrição).
-     - Se houver alguém na fila, o **primeiro da fila** deve ser automaticamente promovido para o status **`CONFIRMADA`**.
-     - Se não houver ninguém na fila de espera, a vaga do curso é liberada (`vagasOcupadas` decrementa).
+- API: `http://localhost:3333`
+- MongoDB: `mongodb://localhost:27028/desafio_senior`
+- Healthcheck: `GET http://localhost:3333/health`
+- Cursos: `GET http://localhost:3333/courses`
 
----
+Os testes utilizam MongoDB em memória e não dependem do Docker. Na primeira instalação, o pacote de testes pode precisar baixar um binário do MongoDB.
 
-#### D. Listagem de Matrículas (`GET /enrollments`)
-- Permitir listar matrículas com suporte a filtros opcionais por query string:
-  - `cursoId`: filtrar por curso.
-  - `alunoId`: filtrar por aluno.
-  - `status`: filtrar por status (`CONFIRMADA`, `FILA_ESPERA`, `CANCELADA`).
+## Arquitetura
 
----
+Organize a aplicação da maneira que considerar adequada para o tamanho do desafio.
 
-## 📡 Tabela de Endpoints da API
+Nenhum padrão arquitetural, conjunto de interfaces ou quantidade mínima de camadas é obrigatório. Uma estrutura simples como `route -> controller -> service/use case -> model/repository` é totalmente válida. Também é válido não criar uma camada que você considere overengineering.
 
-| Método | Endpoint | Descrição | Status de Sucesso |
-| :--- | :--- | :--- | :---: |
-| `GET` | `/health` | Status da API e conexão do MongoDB | `200 OK` |
-| `GET` | `/courses` | Listar cursos disponíveis e quantidade de vagas | `200 OK` |
-| `POST` | `/students` | Cadastrar novo aluno | `201 Created` |
-| `GET` | `/students` | Listar alunos cadastrados | `200 OK` |
-| `POST` | `/enrollments` | Realizar matrícula (regras de idade, bolsa, vagas e fila) | `201 Created` |
-| `GET` | `/enrollments` | Listar matrículas com filtros opcionais | `200 OK` |
-| `PATCH` | `/enrollments/:id/cancel` | Cancelar matrícula e promover repescagem da fila | `200 OK` |
+Avaliaremos:
 
----
+- responsabilidades claras;
+- regras de negócio localizadas e testáveis;
+- acoplamento proporcional;
+- legibilidade e facilidade de alteração;
+- capacidade de explicar as escolhas.
 
-## 🧪 Testes Automatizados
+## Regras de negócio
 
-Como engenheiro(a) Sênior, a qualidade e testabilidade do seu código são essenciais:
-- **Testes Unitários:** Cubra as regras de negócio isoladamente (cálculo de bolsa por faixa de renda, validação de idade mínima, regras de transição de status).
-- **Testes de Integração:** Cubra os principais endpoints da API (cenário de matrícula com vaga, matrícula caindo em fila de espera, cancelamento com promoção automática).
-- A suíte de testes configurada no projeto deve executar todos os testes com sucesso.
+### 1. Alunos
 
----
+#### `POST /students`
 
-## 🏆 Critérios de Avaliação (Nível Sênior II)
+Payload:
 
-| Pilar | O que avaliamos |
-| :--- | :--- |
-| **Arquitetura & Clean Code** | Clareza na separação de responsabilidades, desacoplamento das regras de negócio do framework/banco, coesão e legibilidade do código. |
-| **Modelagem de Domínio** | Regras de negócio encapsuladas em serviços/use cases, clareza nos fluxos e invariantes de domínio. |
-| **Concorrência & Atomicidade** | Tratamento seguro de incremento/decremento de vagas no MongoDB para evitar inconsistências em concorrência. |
-| **Testes Automatizados** | Estratégia de testes, facilidade de manutenção e cobertura de cenários de sucesso e borda (*edge cases*). |
-| **Tratamento de Erros & HTTP** | Uso semântico de status HTTP (400, 404, 409, 422, 500) e mensagens de erro estruturadas e previsíveis. |
-| **Documentação & Decisões** | Clareza na seção de documentação do seu README explicando a arquitetura escolhida, decisões de design e trade-offs. |
+```json
+{
+  "nome": "Maria Silva",
+  "cpf": "123.456.789-00",
+  "email": "maria@example.com",
+  "dataNascimento": "2000-08-20",
+  "rendaFamiliar": 2824.00
+}
+```
 
----
+Regras:
 
-## 📝 Documentação das suas Decisões (Preencher na Entrega)
+- todos os campos são obrigatórios;
+- strings vazias não são válidas;
+- `dataNascimento` é uma data civil no formato `YYYY-MM-DD` e não pode estar no futuro;
+- `rendaFamiliar` deve ser maior ou igual a zero e ter no máximo duas casas decimais;
+- normalize o CPF removendo pontuação e exija exatamente 11 dígitos;
+- para este desafio, não é necessário implementar o algoritmo oficial dos dígitos verificadores do CPF;
+- CPF deve ser único após normalização;
+- normalize email com `trim` e comparação case-insensitive;
+- email deve possuir formato válido e ser único após normalização.
 
-No seu README final de entrega, adicione uma seção explicando brevemente:
-1. **Padrão de Arquitetura Escolhido**: Por que escolheu essa estrutura de pastas e camadas?
-2. **Tratamento de Concorrência/Vagas**: Como você garantiu que duas requisições simultâneas não estourem a capacidade de vagas do curso?
-3. **Decisões e Trade-offs**: Quais decisões você tomou e o que você faria de diferente em um ambiente produtivo de larga escala?
+Retornos esperados:
 
----
+- `201 Created`: aluno criado;
+- `400 Bad Request`: payload inválido;
+- `409 Conflict`: CPF ou email duplicado.
 
-## 🚀 Como Entregar
+#### `GET /students`
 
-1. Suba a solução em um **repositório público** no GitHub.
-2. Certifique-se de que a aplicação sobe corretamente, o seed popula o banco e os testes automatizados executam com sucesso.
-3. Envie o link do repositório conforme as instruções do processo seletivo.
+Retorna os alunos cadastrados com `200 OK`.
 
-*Boa sorte! Estamos ansiosos para ver a sua solução e conversar sobre suas decisões de engenharia!*
+### 2. Matrículas
+
+#### `POST /enrollments`
+
+Payload:
+
+```json
+{
+  "alunoId": "ID_DO_ALUNO",
+  "cursoId": "ID_DO_CURSO"
+}
+```
+
+Regras gerais:
+
+- aluno e curso devem existir;
+- somente cursos com status `ABERTO` aceitam matrícula;
+- ObjectId malformado deve retornar `400 Bad Request`;
+- recurso inexistente deve retornar `404 Not Found`;
+- curso encerrado ou aluno sem idade suficiente deve retornar `422 Unprocessable Entity`;
+- um aluno pode ter no máximo uma matrícula ativa (`CONFIRMADA` ou `FILA_ESPERA`) por curso;
+- uma nova matrícula após cancelamento é permitida;
+- duplicidade ativa deve retornar `409 Conflict`.
+
+#### Idade mínima
+
+A idade deve ser calculada na data da matrícula usando ano, mês e dia do calendário. Não utilize apenas diferença de anos ou divisão da quantidade de dias por 365.
+
+No dia do aniversário, o aluno já possui a nova idade.
+
+#### Bolsa
+
+| Renda familiar | Bolsa | Mensalidade final |
+|---|---:|---:|
+| até `2824.00` | 50% | 50% do valor do curso |
+| de `2824.01` até `5648.00` | 20% | 80% do valor do curso |
+| a partir de `5648.01` | 0% | valor integral |
+
+O percentual da bolsa e o valor final da mensalidade devem ser armazenados na matrícula.
+
+#### Capacidade e fila
+
+- se `vagasOcupadas < capacidadeVagas`, crie a matrícula como `CONFIRMADA` e incremente `vagasOcupadas`;
+- se o curso estiver lotado, crie como `FILA_ESPERA` sem alterar `vagasOcupadas`;
+- `vagasOcupadas` representa somente matrículas confirmadas;
+- duas requisições concorrentes não podem fazer `vagasOcupadas` ultrapassar `capacidadeVagas`.
+
+Exemplo: com uma única vaga restante e duas solicitações simultâneas de alunos diferentes, no máximo uma pode terminar `CONFIRMADA`; a outra deve ir para `FILA_ESPERA`, e o contador deve aumentar somente uma vez.
+
+Uma sequência `buscar curso -> verificar vagas -> atualizar curso` pode sofrer race condition. Durante o live coding, perceber e explicar esse risco já é um sinal importante. Na solução, proteja a capacidade com um update condicional atômico ou uma abordagem equivalente.
+
+### 3. Cancelamento e repescagem
+
+#### `PATCH /enrollments/:id/cancel`
+
+- altere a matrícula para `CANCELADA`;
+- cancelar uma matrícula em `FILA_ESPERA` não altera `vagasOcupadas` e não promove outra pessoa;
+- ao cancelar uma matrícula `CONFIRMADA`, promova a primeira matrícula em espera do mesmo curso;
+- a fila deve ser ordenada por `createdAt` crescente e, em caso de empate, `_id` crescente;
+- se houver promoção, `vagasOcupadas` permanece igual: uma pessoa saiu e outra ocupou a vaga;
+- se não houver fila, decremente `vagasOcupadas` exatamente uma vez;
+- chamadas repetidas ou concorrentes não podem repetir decrementos nem promover mais de uma pessoa para a mesma vaga.
+
+Para uma matrícula já cancelada, você pode escolher entre retornar o estado atual com `200 OK` ou retornar `409 Conflict`. Documente a decisão. Em ambos os casos, a operação não pode produzir novos efeitos.
+
+### 4. Listagem de matrículas
+
+#### `GET /enrollments`
+
+Filtros opcionais:
+
+- `cursoId`;
+- `alunoId`;
+- `status`: `CONFIRMADA`, `FILA_ESPERA` ou `CANCELADA`.
+
+Filtros fazem parte do escopo, mas possuem peso menor que a correção das regras de matrícula, capacidade e cancelamento.
+
+## Concorrência
+
+- reconhecer a race condition da última vaga;
+- impedir que a capacidade seja ultrapassada;
+- evitar efeitos duplicados no cancelamento;
+- explicar como tratou ou trataria duplicidade concorrente;
+- documentar limitações relevantes da solução.
+
+Não existe uma abordagem técnica única obrigatória. Escolha uma solução proporcional, explique o que ela garante e reconheça suas limitações.
+
+## Testes
+
+Não existe meta obrigatória de cobertura percentual.
+
+Considere pelo menos os seguintes cenários:
+
+### Unitários
+
+- fronteiras das três faixas de bolsa;
+- idade antes, no dia e depois do aniversário;
+- regras de transição relevantes, se estiverem isoladas do banco.
+
+### Integração
+
+- cadastro válido e duplicidade de aluno;
+- matrícula confirmada;
+- matrícula em fila de espera;
+- rejeição por idade;
+- prevenção de matrícula ativa duplicada;
+- cancelamento com promoção;
+- cancelamento sem pessoa na fila.
+
+Um teste concorrente provando que a capacidade não é ultrapassada é um diferencial importante.
+
+Durante o live coding, não é esperado escrever essa suíte completa. Um único teste relevante, ou uma boa explicação da estratégia, já fornece sinal.
+
+## Critérios de avaliação
+
+### Live coding
+
+Priorizaremos:
+
+1. raciocínio e comunicação;
+2. entendimento das regras e invariantes;
+3. fundamentos backend/HTTP/MongoDB;
+4. identificação de concorrência e inconsistências;
+5. organização e qualidade das decisões;
+6. estratégia de testes.
+
+A quantidade de código concluída possui peso baixo.
+
+## Documentação das decisões
+
+Adicione ao README uma seção curta explicando:
+
+1. como organizou as responsabilidades e por quê;
+2. como protegeu a capacidade contra requisições concorrentes;
+3. como evitou matrículas ativas duplicadas;
+4. limitações e trade-offs conhecidos;
+5. o que faria diferente em um ambiente de produção.

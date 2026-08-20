@@ -1,26 +1,36 @@
 {
   "name": "desafio-backend-senior-ii",
   "version": "1.0.0",
-  "description": "Desafio Técnico Backend Sênior II - Express, MongoDB e Arquitetura",
+  "description": "Desafio Técnico Backend Sênior II - Matrículas e Bolsas",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "seed": "node src/seed.js",
-    "test": "jest --runInBand --detectOpenHandles --forceExit",
-    "test:watch": "jest --watch"
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "test": "jest --runInBand --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --runInBand --coverage"
   },
   "keywords": [
     "nodejs",
     "express",
     "mongodb",
     "mongoose",
-    "clean-architecture",
     "backend",
     "senior"
   ],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "20.x || 22.x || 24.x"
+  },
+  "config": {
+    "mongodbMemoryServer": {
+      "version": "7.0.14"
+    }
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -38,9 +48,7 @@
     "testMatch": [
       "**/tests/**/*.test.js"
     ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/tests/setup.js"
-    ],
+    "testTimeout": 120000,
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/tests/"

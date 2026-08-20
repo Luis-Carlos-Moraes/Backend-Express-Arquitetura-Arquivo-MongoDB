@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const Course = require('./models/Course');
 
 const app = express();
 
@@ -9,25 +10,10 @@ app.use(express.json());
 
 // ---------------------------------------------------------------------------
 // NOTA PARA O CANDIDATO:
-// O código abaixo foi escrito de forma simples e acoplada apenas para garantir
-// que o boilerplate execute imediatamente. Sua missão inclui refatorar esta
-// estrutura para uma arquitetura limpa, desacoplada e profissional (ex: camadas,
-// Clean Architecture, Hexagonal, DDD, separando rotas, controllers, services, etc).
+// Esta aplicação é intencionalmente pequena. Organize o novo código de forma
+// proporcional ao desafio e refatore o que considerar útil. Não existe um padrão
+// arquitetural ou uma quantidade mínima de camadas obrigatória.
 // ---------------------------------------------------------------------------
-
-// Schema e Model inicial de Exemplo (Cursos)
-const courseSchema = new mongoose.Schema({
-  nome: { type: String, required: true },
-  codigo: { type: String, required: true, unique: true },
-  descricao: { type: String },
-  idadeMinima: { type: Number, required: true, default: 0 },
-  capacidadeVagas: { type: Number, required: true, min: 1 },
-  vagasOcupadas: { type: Number, default: 0, min: 0 },
-  valorMensalidade: { type: Number, required: true, min: 0 },
-  status: { type: String, enum: ['ABERTO', 'ENCERRADO'], default: 'ABERTO' }
-}, { timestamps: true });
-
-const Course = mongoose.models.Course || mongoose.model('Course', courseSchema);
 
 // Rota de Healthcheck
 app.get('/health', (req, res) => {
@@ -39,8 +25,10 @@ app.get('/health', (req, res) => {
     3: 'disconnecting'
   };
 
-  return res.status(200).json({
-    status: 'ok',
+  const isReady = dbState === 1;
+
+  return res.status(isReady ? 200 : 503).json({
+    status: isReady ? 'ok' : 'degraded',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
     database: dbStatusMap[dbState] || 'unknown'
@@ -50,7 +38,7 @@ app.get('/health', (req, res) => {
 // Rota básica de listagem de cursos
 app.get('/courses', async (req, res) => {
   try {
-    const courses = await Course.find();
+    const courses = await Course.find().lean();
     return res.status(200).json(courses);
   } catch (error) {
     return res.status(500).json({ error: 'Erro ao buscar cursos', message: error.message });

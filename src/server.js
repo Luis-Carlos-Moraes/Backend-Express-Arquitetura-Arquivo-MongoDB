@@ -9,7 +9,7 @@ async function bootstrap() {
   try {
     console.log('Conectando ao MongoDB...');
     await mongoose.connect(MONGO_URI);
-    console.log(`✅ MongoDB conectado com sucesso em: ${MONGO_URI}`);
+    console.log('✅ MongoDB conectado com sucesso');
 
     app.listen(PORT, () => {
       console.log(`🚀 Servidor rodando com sucesso na porta ${PORT}`);

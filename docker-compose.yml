@@ -1,9 +1,6 @@
-version: '3.8'
-
 services:
   mongodb:
-    image: mongo:7.0
-    container_name: desafio_backend_mongodb
+    image: mongo:7.0.14
     restart: unless-stopped
     ports:
       - "27028:27017"
@@ -11,6 +8,12 @@ services:
       - MONGO_INITDB_DATABASE=desafio_senior
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
 
 volumes:
   mongo_data:
