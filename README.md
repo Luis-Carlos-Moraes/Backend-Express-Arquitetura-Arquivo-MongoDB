@@ -1,4 +1,4 @@
-# Etapa 2 (Backend – Express + Arquitetura + MongoDB)
+# Backend – Express + Arquitetura + MongoDB
 
 ## Desafio
 
