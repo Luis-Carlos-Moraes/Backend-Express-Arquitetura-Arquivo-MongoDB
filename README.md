@@ -165,7 +165,7 @@ No seu README final de entrega, adicione uma seção explicando brevemente:
 
 ## 🚀 Como Entregar
 
-1. Suba a solução em um **repositório público ou privado** no GitHub (se privado, compartilhe com o usuário avaliador conforme instruído).
+1. Suba a solução em um **repositório público** no GitHub.
 2. Certifique-se de que a aplicação sobe corretamente, o seed popula o banco e os testes automatizados executam com sucesso.
 3. Envie o link do repositório conforme as instruções do processo seletivo.
 
