@@ -71,8 +71,8 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 
 | ID | Status | Task | Aceite |
 |---|---|---|---|
-| T7.1 | TODO | Seção "Decisões" no `README.md`: (1) responsabilidades e por quê; (2) proteção de capacidade concorrente; (3) prevenção de duplicidade ativa; (4) limitações/trade-offs; (5) o que faria diferente em produção | seção presente, referencia `specs/` |
-| T7.2 | TODO | Nota no README sobre a decisão do `cancel` idempotente (`200` em já cancelada) | presente |
+| T7.1 | DONE | Seção "Decisões" no `README.md`: (1) responsabilidades e por quê; (2) proteção de capacidade concorrente; (3) prevenção de duplicidade ativa; (4) limitações/trade-offs; (5) o que faria diferente em produção | seção presente, referencia `specs/` |
+| T7.2 | DONE | Nota no README sobre a decisão do `cancel` idempotente (`200` em já cancelada) | presente |
 
 ## Rastreio de invariantes → testes
 

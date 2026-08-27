@@ -295,10 +295,80 @@ A quantidade de código concluída possui peso baixo.
 
 ## Documentação das decisões
 
-Adicione ao README uma seção curta explicando:
+> A especificação funcional completa, o plano técnico e a estratégia de testes estão em [`specs/`](specs/).
+> O desenvolvimento seguiu SDD (spec → plano → tasks → testes), com um commit por fase.
 
-1. como organizou as responsabilidades e por quê;
-2. como protegeu a capacidade contra requisições concorrentes;
-3. como evitou matrículas ativas duplicadas;
-4. limitações e trade-offs conhecidos;
-5. o que faria diferente em um ambiente de produção.
+### 1. Organização das responsabilidades
+
+`route → controller → service → repository → model`, mais dois módulos de apoio:
+
+| Camada | Responsabilidade | Não faz |
+|---|---|---|
+| `routes/` | montar Router, aplicar `validate(schema)` | regra de negócio |
+| `controllers/` | traduzir HTTP ↔ domínio, status e envelope | decisão de regra |
+| `services/` | regras, invariantes, orquestração; lança `AppError` | conhecer `req`/`res` |
+| `repositories/` | única camada que fala Mongoose (inclui os updates atômicos) | lançar `AppError` |
+| `models/` | schema + índices | — |
+| `domain/` | `scholarship` e `age` — funções puras, testadas isoladas | I/O |
+| `validation/` | schemas zod na borda; `assertObjectId` → `400 INVALID_OBJECT_ID` | — |
+
+Por quê: o desafio é pequeno, mas as regras de concorrência viram queries condicionais específicas
+(`claimSeat`, `releaseSeat`, `cancelIfActive`, `promoteFirstInQueue`) — concentrá-las em repositórios
+nomeados mantém o service legível e os pontos críticos localizados. Regras puras (bolsa, idade) ficam
+fora do banco para teste unitário direto. Erros de domínio passam por `AppError` e um `errorHandler`
+único os converte no envelope `{ error: { code, message, details? } }`.
+
+### 2. Proteção da capacidade sob concorrência
+
+Nenhum `ler → decidir em JS → escrever`. A vaga é alocada por **um único update condicional atômico**:
+
+```js
+Course.findOneAndUpdate(
+  { _id, status: 'ABERTO', $expr: { $lt: ['$vagasOcupadas', '$capacidadeVagas'] } },
+  { $inc: { vagasOcupadas: 1 } },
+  { new: true }
+)
+```
+
+O MongoDB serializa escritas no mesmo documento e reavalia o filtro no instante da escrita
+(`filter` + `$inc` = compare-and-swap). Com `N` requisições e `K` vagas, apenas `K` updates
+satisfazem o `$expr`; os demais recebem `null` e viram `FILA_ESPERA` sem tocar o contador.
+`releaseSeat` usa a guarda `vagasOcupadas > 0` para nunca ficar negativo.
+Prova: `tests/integration/concurrency.test.js` (capacidade `K`, `N` `POST` simultâneos → exatamente `K` confirmadas).
+
+### 3. Prevenção de matrícula ativa duplicada
+
+Duas defesas; a segunda é a garantia real:
+
+1. leitura `existsActive(alunoId, cursoId)` no service → `409` limpo no caso comum;
+2. **índice único parcial** `{ alunoId, cursoId }` com `partialFilterExpression: { status: { $in: ['CONFIRMADA','FILA_ESPERA'] } }`.
+   Em corrida, um insert vence e o outro recebe `E11000`, traduzido para `409 DUPLICATE_ACTIVE_ENROLLMENT`
+   (com compensação do `claimSeat` já aplicado). `CANCELADA` fica fora do índice → nova matrícula após cancelamento é permitida.
+
+O cancelamento é idempotente pela **porta única** `cancelIfActive` (`findOneAndUpdate` com `status $in` ativos):
+só o request que efetiva a transição `ativa → CANCELADA` produz efeito; repetições/concorrência recebem `null`.
+A promoção da fila (`findOneAndUpdate` com `status: 'FILA_ESPERA'`, ordem `createdAt` asc / `_id` asc)
+garante que dois cancelamentos concorrentes nunca promovam a mesma pessoa.
+
+**Decisão:** `PATCH /enrollments/:id/cancel` numa matrícula **já `CANCELADA`** responde **`200 OK`** com o
+estado atual e **sem novos efeitos** (idempotente para retries de cliente).
+
+### 4. Limitações e trade-offs
+
+- **Sem transação multi-documento** entre `claimSeat` + `create` e entre `cancelIfActive` + `promote`/`release`.
+  Uma queda de processo entre os passos pode divergir `vagasOcupadas` da contagem de confirmadas.
+  Mitigação atual: passos idempotentes + compensação no `E11000`.
+- `mongodb-memory-server` roda **standalone** → transações não seriam testáveis mesmo se adicionadas.
+- Testes de concorrência usam `Promise.all` no mesmo processo/conexão: **aproximam**, não reproduzem concorrência distribuída.
+- Sem `Idempotency-Key`: um retry de `POST /enrollments` que já criou não é deduplicado (a menos que caia na regra de duplicidade ativa).
+- CPF sem validação de dígito verificador (fora do escopo do desafio).
+- `existsActive` + índice: o custo da corrida é uma exceção `E11000` traduzida.
+
+### 5. O que faria diferente em produção
+
+- Envolver `claimSeat`+`create` e o cancelamento em **transação** (replica set), ou um job de reconciliação `vagasOcupadas` ↔ confirmadas.
+- `Idempotency-Key` em `POST /enrollments` e no `cancel`.
+- CORS restrito por origem (hoje `cors()` liberado) e `helmet()` com configuração explícita; hoje só `app.disable('x-powered-by')`.
+- Rate limiting, limite de corpo em `express.json({ limit })`, logs estruturados e observabilidade.
+- Paginação em `GET /students` e `GET /enrollments`.
+- Promoção da fila disparando notificação ao aluno.
