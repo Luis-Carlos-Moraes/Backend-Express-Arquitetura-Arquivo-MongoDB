@@ -64,8 +64,8 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 
 | ID | Status | Task | Aceite |
 |---|---|---|---|
-| T6.1 | TODO | `tests/integration/concurrency.test.js` — 1 vaga + 2 `POST` simultâneos → 1 `CONFIRMADA` / 1 `FILA_ESPERA` / contador == capacidade (INV-4) | verde |
-| T6.2 | TODO | mesmo arquivo — 2 `cancel` simultâneos na mesma confirmada → 1 decremento / 1 promoção (INV-5) | verde |
+| T6.1 | DONE | `tests/integration/concurrency.test.js` — 1 vaga + 2 `POST` simultâneos → 1 `CONFIRMADA` / 1 `FILA_ESPERA` / contador == capacidade (INV-4) | verde |
+| T6.2 | DONE | mesmo arquivo — 2 `cancel` simultâneos na mesma confirmada → 1 decremento / 1 promoção (INV-5) | verde |
 
 ## Fase 7 — Documentação
 
