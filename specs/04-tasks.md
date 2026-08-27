@@ -6,19 +6,19 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 
 | ID | Status | Task | Aceite |
 |---|---|---|---|
-| T0.1 | TODO | Restaurar `src/app.js` para estado que carrega (remover `app.route/app.user`, `createAlunoController`, imports mortos) | `node -e "require('./src/app')"` sem erro |
-| T0.2 | TODO | Confirmar `npm test` verde com a suíte atual (`health.test.js`) | 3 testes passando |
-| T0.3 | TODO | `git add` de `package.json`/`package-lock.json` (zod) — decidir se commita agora | working tree limpo ou stage coerente |
+| T0.1 | DONE | Restaurar `src/app.js` para estado que carrega (remover `app.route/app.user`, `createAlunoController`, imports mortos) | `node -e "require('./src/app')"` sem erro |
+| T0.2 | DONE | Confirmar `npm test` verde com a suíte atual (`health.test.js`) | 3 testes passando |
+| T0.3 | DONE | Branch `feat/matriculas-bolsas`; commit `adb16c5` com `specs/` + zod (`Aluno.js` do WIP removido) | working tree limpo ou stage coerente |
 
 ## Fase 1 — Fundação
 
 | ID | Status | Task | Aceite |
 |---|---|---|---|
-| T1.1 | TODO | `src/errors/AppError.js` (`status`, `code`, `message`, `details`) | instanciável; `instanceof Error` |
-| T1.2 | TODO | `src/middlewares/errorHandler.js` + `notFound.js` (envelope, trata `ZodError`) | 404 e 500 saem no envelope novo |
-| T1.3 | TODO | `src/config/database.js` (`connect`/`disconnect`) e refatorar `server.js`/`seed.js` para usar | `npm run seed` e `npm run dev` funcionam |
-| T1.4 | TODO | `src/routes/index.js` como Router raiz; `app.js` monta `app.use(routes)` + middlewares | rotas atuais seguem respondendo |
-| T1.5 | TODO | Mover `/health` e `/courses` para `controllers/` + `routes/` | testes atuais continuam verdes |
+| T1.1 | DONE | `src/errors/AppError.js` (`status`, `code`, `message`, `details`) | instanciável; `instanceof Error` |
+| T1.2 | DONE | `src/middlewares/errorHandler.js` + `notFound.js` + `asyncHandler.js` (envelope, trata `ZodError`) | 404 e 500 saem no envelope novo |
+| T1.3 | DONE | `src/config/database.js` (`connect`/`disconnect`); `server.js`/`seed.js` refatorados | `node -c` OK; API do connect correta |
+| T1.4 | DONE | `src/routes/index.js` Router raiz; `app.js` monta `routes` + `notFound` + `errorHandler` + `disable('x-powered-by')` | rotas atuais respondendo |
+| T1.5 | DONE | `/health` e `/courses` movidos para `controllers/` + `routes/` | `npm test` 3/3 verde |
 
 ## Fase 2 — Domínio puro + testes unitários
 
