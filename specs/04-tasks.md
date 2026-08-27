@@ -56,9 +56,9 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 
 | ID | Status | Task | Aceite |
 |---|---|---|---|
-| T5.1 | TODO | `services/enrollmentService.js#cancel` — sequência do plano (porta única `cancelIfActive`, promoção FIFO, `releaseSeat`) | — |
-| T5.2 | TODO | `PATCH /enrollments/:id/cancel` no controller/route — 200/400/404 | — |
-| T5.3 | TODO | `tests/integration/cancel.test.js` — confirmada+fila→promove e `vagasOcupadas` estável; confirmada sem fila→`-1`; fila→sem efeito; já cancelada→200 sem efeito; 404 | verde |
+| T5.1 | DONE | `services/enrollmentService.js#cancel` — sequência do plano (porta única `cancelIfActive`, promoção FIFO, `releaseSeat`) | — |
+| T5.2 | DONE | `PATCH /enrollments/:id/cancel` no controller/route — 200/400/404 | — |
+| T5.3 | DONE | `tests/integration/cancel.test.js` — confirmada+fila→promove e `vagasOcupadas` estável; confirmada sem fila→`-1`; fila→sem efeito; já cancelada→200 sem efeito; 404 | verde |
 
 ## Fase 6 — Concorrência (diferencial)
 
