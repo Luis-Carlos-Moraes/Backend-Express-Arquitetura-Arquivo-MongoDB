@@ -2,6 +2,10 @@
 
 API de gestão de matrículas e bolsas educacionais utilizando Node.js, Express e MongoDB.
 
+> **Nota da entrega:** a pasta [`specs/`](specs/) faz parte da solução e foi mantida no repositório
+> de propósito — ela mostra o método de trabalho (Spec Driven Development assistido por IA) usado
+> antes de escrever código. Ver [Método de trabalho](#método-de-trabalho-sdd-assistido-por-ia).
+
 ## Objetivo
 
 Este desafio avalia principalmente como você:
@@ -295,8 +299,23 @@ A quantidade de código concluída possui peso baixo.
 
 ## Documentação das decisões
 
-> A especificação funcional completa, o plano técnico e a estratégia de testes estão em [`specs/`](specs/).
-> O desenvolvimento seguiu SDD (spec → plano → tasks → testes), com um commit por fase.
+### Método de trabalho (SDD assistido por IA)
+
+A pasta [`specs/`](specs/) foi versionada de propósito, para deixar visível **como conduzi o trabalho com IA**.
+Antes de escrever código, transformei o enunciado em especificação executável e revisei cada documento:
+
+| Documento | Papel |
+|---|---|
+| [`specs/01-stack.md`](specs/01-stack.md) | stack, convenções, nomenclatura (o que atravessa o HTTP segue o enunciado; o resto é inglês) |
+| [`specs/02-spec.md`](specs/02-spec.md) | contrato HTTP, regras por endpoint, **8 invariantes testáveis**, matriz de códigos de erro |
+| [`specs/03-plan.md`](specs/03-plan.md) | arquitetura em camadas, modelo de dados, **estratégia de concorrência com pseudocódigo** |
+| [`specs/04-tasks.md`](specs/04-tasks.md) | backlog em 7 fases com critério de aceite e rastreio invariante → teste |
+| [`specs/05-tests.md`](specs/05-tests.md) | pirâmide de testes, helpers/factories, tabela de casos por arquivo |
+
+Fluxo: **spec → plano → tasks → testes**, decisões ambíguas resolvidas explicitamente antes da implementação
+(camadas, envelope de erro, semântica do `cancel` idempotente), e **um commit por fase** — o histórico do
+Git mostra a progressão `baseline → fundação → domínio → students → enrollments → cancel → concorrência → docs`.
+A IA foi usada para acelerar spec, boilerplate e testes; a revisão de regras, invariantes e trade-offs foi minha.
 
 ### 1. Organização das responsabilidades
 
