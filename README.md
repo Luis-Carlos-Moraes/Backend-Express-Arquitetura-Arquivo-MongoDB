@@ -2,6 +2,9 @@
 
 API de gestão de matrículas e bolsas educacionais utilizando Node.js, Express e MongoDB.
 
+<!-- Ajuste o slug do repositório se o remote mudar. -->
+[![CI](https://github.com/Luis-Carlos-Moraes/Backend-Express-Arquitetura-Arquivo-MongoDB/actions/workflows/ci.yml/badge.svg)](https://github.com/Luis-Carlos-Moraes/Backend-Express-Arquitetura-Arquivo-MongoDB/actions/workflows/ci.yml)
+
 > **Nota da entrega:** a pasta [`specs/`](specs/) faz parte da solução e foi mantida no repositório
 > de propósito — ela mostra o método de trabalho (Spec Driven Development assistido por IA) usado
 > antes de escrever código. Ver [Método de trabalho](#método-de-trabalho-sdd-assistido-por-ia).
@@ -281,6 +284,22 @@ Considere pelo menos os seguintes cenários:
 Um teste concorrente provando que a capacidade não é ultrapassada é um diferencial importante.
 
 Durante o live coding, não é esperado escrever essa suíte completa. Um único teste relevante, ou uma boa explicação da estratégia, já fornece sinal.
+
+## Integração contínua
+
+O workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) roda a suíte a cada `push` (qualquer branch)
+e em cada `pull_request`.
+
+| Item | Detalhe |
+|---|---|
+| Runner | `ubuntu-22.04` (libssl compatível com o binário do MongoDB 7.0.14) |
+| Matriz | Node `20.x`, `22.x`, `24.x` (`fail-fast: false`) — cobre o range de `engines` do `package.json` |
+| Passos | `npm ci` → `npm run test:coverage` |
+| Cache | dependências npm (`actions/setup-node`) e binário do `mongodb-memory-server` (`~/.cache/mongodb-binaries`) |
+| Artefato | relatório de cobertura publicado na leg Node `24.x` |
+
+Os testes usam MongoDB em memória, então o job **não** precisa de serviço de banco nem de Docker.
+O badge de status está no topo deste README — atualize o slug do repositório se o remote mudar.
 
 ## Critérios de avaliação
 

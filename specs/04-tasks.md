@@ -74,6 +74,13 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 | T7.1 | DONE | Seção "Decisões" no `README.md`: (1) responsabilidades e por quê; (2) proteção de capacidade concorrente; (3) prevenção de duplicidade ativa; (4) limitações/trade-offs; (5) o que faria diferente em produção | seção presente, referencia `specs/` |
 | T7.2 | DONE | Nota no README sobre a decisão do `cancel` idempotente (`200` em já cancelada) | presente |
 
+## Fase 8 — CI
+
+| ID | Status | Task | Aceite |
+|---|---|---|---|
+| T8.1 | DONE | `.github/workflows/ci.yml` — `push`/`pull_request`, matriz Node `20/22/24` em `ubuntu-22.04`, `npm ci` + `npm run test:coverage`, cache de npm e do binário do `mongodb-memory-server`, artefato de cobertura | YAML válido; sem dependência de serviço de banco |
+| T8.2 | DONE | README: seção "Integração contínua" + badge de status no topo | presente |
+
 ## Rastreio de invariantes → testes
 
 | Invariante | Coberta por |
@@ -88,4 +95,4 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 
 ## Ordem de execução sugerida
 
-`Fase 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7`. Fases 2 e 3 são paralelizáveis. Não avançar de fase com a suíte vermelha.
+`Fase 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8`. Fases 2 e 3 são paralelizáveis. Não avançar de fase com a suíte vermelha.
