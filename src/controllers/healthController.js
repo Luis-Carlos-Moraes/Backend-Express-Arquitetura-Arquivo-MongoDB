@@ -7,7 +7,6 @@ const DB_STATUS = {
   3: 'disconnecting',
 };
 
-/** GET /health -> 200 quando o banco está pronto, 503 caso contrário. */
 function health(req, res) {
   const state = mongoose.connection.readyState;
   const ready = state === 1;

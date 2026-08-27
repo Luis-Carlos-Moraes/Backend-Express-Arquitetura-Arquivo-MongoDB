@@ -3,7 +3,7 @@
 API de gestão de matrículas e bolsas educacionais utilizando Node.js, Express e MongoDB.
 
 <!-- Ajuste o slug do repositório se o remote mudar. -->
-[![CI](https://github.com/Luis-Carlos-Moraes/Backend-Express-Arquitetura-Arquivo-MongoDB/actions/workflows/ci.yml/badge.svg)](https://github.com/Luis-Carlos-Moraes/Backend-Express-Arquitetura-Arquivo-MongoDB/actions/workflows/ci.yml)
+[![CI](https://github.com/mateussilvasouza/Backend-Express-Arquitetura-Arquivo-MongoDB/actions/workflows/ci.yml/badge.svg)](https://github.com/mateussilvasouza/Backend-Express-Arquitetura-Arquivo-MongoDB/actions/workflows/ci.yml)
 
 > **Nota da entrega:** a pasta [`specs/`](specs/) faz parte da solução e foi mantida no repositório
 > de propósito — ela mostra o método de trabalho (Spec Driven Development assistido por IA) usado
