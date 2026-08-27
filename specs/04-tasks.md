@@ -33,12 +33,12 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 
 | ID | Status | Task | Aceite |
 |---|---|---|---|
-| T3.1 | TODO | Criar `src/models/Student.js` (coleção `students`; `required` no email, `min:0` renda, `dataNascimento` String, índices unique, lowercase) e remover `src/models/Aluno.js` do WIP | `Student.init()` cria índices |
-| T3.2 | TODO | `src/validation/studentSchema.js` (zod): obrigatórios, sem string vazia, CPF→11 dígitos, email formato+trim+lower, data `YYYY-MM-DD` não-futura, renda `>=0` 2 casas | schema rejeita casos inválidos |
-| T3.3 | TODO | `repositories/studentRepository.js` (`create`, `findById`, `findByCpf`, `findByEmail`, `list`) | — |
-| T3.4 | TODO | `services/studentService.js` (normaliza, checa unicidade → `AppError` 409, trata `E11000`) | — |
-| T3.5 | TODO | `controllers/studentController.js` + `routes/studentRoutes.js` (`POST /students` 201, `GET /students` 200) | — |
-| T3.6 | TODO | `tests/integration/students.test.js` — válido 201; CPF dup 409; email dup (case/space) 409; inválido 400 | verde |
+| T3.1 | DONE | `src/models/Student.js` (coleção `students`; email `required`+`unique`, renda `min:0`, `dataNascimento` String, `toJSON` com `id`); `Aluno.js` do WIP removido | índices via `syncIndexes` no teste |
+| T3.2 | DONE | `src/validation/studentSchema.js` (zod v4): obrigatórios, sem string vazia, CPF→11 dígitos, email `z.email` + trim + lower, data `YYYY-MM-DD` válida e não-futura, renda `>=0` com ≤2 casas (checagem em centavos) | schema rejeita casos inválidos |
+| T3.3 | DONE | `repositories/studentRepository.js` (`create`, `findById`, `findByCpf`, `findByEmail`, `list`) | — |
+| T3.4 | DONE | `services/studentService.js` (checa unicidade → `AppError` 409, fallback `E11000` por `keyPattern`) | — |
+| T3.5 | DONE | `controllers/studentController.js` + `routes/studentRoutes.js` + `middlewares/validate.js`; montado em `routes/index.js` | — |
+| T3.6 | DONE | `tests/integration/students.test.js` + helpers (`factories`, `dates`, `assertions`, `mongo.syncIndexes`) — 201 normalizado; 9 casos 400; CPF dup 409; email dup 409; `GET` 200 | verde (29/29) |
 
 ## Fase 4 — Matrículas
 

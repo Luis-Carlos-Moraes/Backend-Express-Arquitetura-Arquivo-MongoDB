@@ -14,4 +14,9 @@ class AppError extends Error {
   }
 }
 
+AppError.badRequest = (code, message, details) => new AppError(400, code, message, details);
+AppError.notFound = (code, message) => new AppError(404, code, message);
+AppError.conflict = (code, message) => new AppError(409, code, message);
+AppError.unprocessable = (code, message) => new AppError(422, code, message);
+
 module.exports = AppError;
