@@ -44,13 +44,13 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 
 | ID | Status | Task | Aceite |
 |---|---|---|---|
-| T4.1 | TODO | `src/models/Enrollment.js` — schema, enum, snapshot, índice único parcial, índice de fila | `Enrollment.init()` cria índices |
-| T4.2 | TODO | `repositories/enrollmentRepository.js` — `create`, `findById`, `existsActive`, `list(filtros)`, `cancelIfActive`, `promoteFirstInQueue` | — |
-| T4.3 | TODO | `repositories/courseRepository.js` — `findById`, `claimSeat`, `releaseSeat` (updates atômicos do [03-plan.md](03-plan.md)) | — |
-| T4.4 | TODO | `validation/enrollmentSchema.js` — body (`alunoId`,`cursoId`) + query (`cursoId`,`alunoId`,`status`) | ObjectId malformado → 400 |
-| T4.5 | TODO | `services/enrollmentService.js` — sequência de 10 passos do plano (400/404/422/409, bolsa, claimSeat, compensação) | — |
-| T4.6 | TODO | `controllers/enrollmentController.js` + `routes/enrollmentRoutes.js` — `POST /enrollments` 201, `GET /enrollments` 200 | — |
-| T4.7 | TODO | `tests/integration/enrollments.test.js` — confirmada; fila; 422 idade; 422 curso encerrado; 404 aluno/curso; 400 objectid; 409 duplicada; matrícula pós-cancelamento | verde |
+| T4.1 | DONE | `src/models/Enrollment.js` — schema, enum, snapshot, índice único parcial, índice de fila | `Enrollment.init()` cria índices |
+| T4.2 | DONE | `repositories/enrollmentRepository.js` — `create`, `findById`, `existsActive`, `list(filtros)`, `cancelIfActive`, `promoteFirstInQueue` | — |
+| T4.3 | DONE | `repositories/courseRepository.js` — `findById`, `claimSeat`, `releaseSeat` (updates atômicos do [03-plan.md](03-plan.md)) | — |
+| T4.4 | DONE | `validation/enrollmentSchema.js` — body (`alunoId`,`cursoId`) + query (`cursoId`,`alunoId`,`status`) | ObjectId malformado → 400 |
+| T4.5 | DONE | `services/enrollmentService.js` — sequência de 10 passos do plano (400/404/422/409, bolsa, claimSeat, compensação) | — |
+| T4.6 | DONE | `controllers/enrollmentController.js` + `routes/enrollmentRoutes.js` — `POST /enrollments` 201, `GET /enrollments` 200 | — |
+| T4.7 | DONE | `tests/integration/enrollments.test.js` — confirmada; fila; 422 idade; 422 curso encerrado; 404 aluno/curso; 400 objectid; 409 duplicada; matrícula pós-cancelamento | verde |
 
 ## Fase 5 — Cancelamento e repescagem
 

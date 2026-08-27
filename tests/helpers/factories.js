@@ -1,5 +1,6 @@
 const Course = require('../../src/models/Course');
 const Student = require('../../src/models/Student');
+const Enrollment = require('../../src/models/Enrollment');
 
 let seq = 0;
 const uniq = () => `${Date.now().toString(36)}-${(seq++).toString(36)}`;
@@ -32,4 +33,13 @@ const makeCourse = (overrides = {}) =>
     ...overrides,
   });
 
-module.exports = { makeStudent, makeCourse, randomCpf, uniq };
+const makeEnrollment = (overrides = {}) =>
+  Enrollment.create({
+    status: 'CONFIRMADA',
+    percentualBolsa: 20,
+    valorMensalidadeOriginal: 1000,
+    mensalidadeFinal: 800,
+    ...overrides,
+  });
+
+module.exports = { makeStudent, makeCourse, makeEnrollment, randomCpf, uniq };
