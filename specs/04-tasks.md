@@ -24,10 +24,10 @@ Status: `TODO` · `WIP` · `DONE` · `BLOCKED`
 
 | ID | Status | Task | Aceite |
 |---|---|---|---|
-| T2.1 | TODO | `src/domain/scholarship.js` (export `scholarship`) | — |
-| T2.2 | TODO | `tests/unit/scholarship.test.js` — fronteiras `0`, `2824.00`, `2824.01`, `5648.00`, `5648.01` | verde |
-| T2.3 | TODO | `src/domain/age.js` (export `ageOn`) | — |
-| T2.4 | TODO | `tests/unit/age.test.js` — véspera / dia / pós aniversário; 29/02 | verde |
+| T2.1 | DONE | `src/domain/scholarship.js` (export `scholarship`, comparação em centavos) | — |
+| T2.2 | DONE | `tests/unit/scholarship.test.js` — fronteiras `0`, `2824.00`, `2824.01`, `5648.00`, `5648.01` | verde |
+| T2.3 | DONE | `src/domain/age.js` (export `ageOn`, componentes UTC) | — |
+| T2.4 | DONE | `tests/unit/age.test.js` — véspera / dia / pós aniversário; 29/02; UTC | verde |
 
 ## Fase 3 — Students
 
